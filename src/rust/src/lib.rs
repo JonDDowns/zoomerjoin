@@ -22,6 +22,12 @@ use crate::hamminghasher::HammingHasher;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 
+use chrono::Local;
+
+fn ts() -> String {
+    Local::now().format("%Y-%m-%d %H:%M:%S").to_string()
+}
+
 #[extendr]
 fn rust_em_link(x_robj: Robj, probs: &[f64], tol: f64, max_iter: i32) -> Vec<f64> {
     let x_mat = <ArrayView2<i32>>::try_from(&x_robj)
@@ -120,7 +126,7 @@ fn rust_jaccard_join(
     let left_string_vec = left_string_r.as_str_vector().unwrap();
 
     if progress {
-        rprintln!("Starting to generate shingles");
+        rprintln!("[{}] Starting to generate shingles", ts());
     }
 
     let joiner = MinHashJoiner::new(
@@ -131,7 +137,7 @@ fn rust_jaccard_join(
     );
 
     if progress {
-        rprintln!("Done generating shingles");
+        rprintln!("[{}] Done generating shingles", ts());
     }
 
     let chosen_indexes = joiner.join(
@@ -143,10 +149,18 @@ fn rust_jaccard_join(
         &pool,
     );
 
+    if progress {
+        rprintln!("[{}] Generate index array", ts());
+    }
+
     let mut out_arr: Array2<u64> = Array2::zeros((chosen_indexes.len(), 2));
     for (i, pair) in chosen_indexes.iter().enumerate() {
         out_arr[[i, 0]] = pair.1 as u64 + 1;
         out_arr[[i, 1]] = pair.0 as u64 + 1;
+    }
+
+    if progress {
+        rprintln!("[{}] Convert index array to R", ts());
     }
 
     Robj::try_from(&out_arr).into()

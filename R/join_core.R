@@ -212,6 +212,10 @@ jaccard_join <- function(a, b, by_a, by_b, block_by_a, block_by_b, n_gram_width,
        n_gram_width,
       nthread = nthread
      )
+  timestamp <- Sys.time()
+  formatted_time <- format(timestamp, "%Y-%m-%d %H:%M:%S")
+  cat("%s - Jaccard similarities returned")
+
 
   return(list(
               match_table = match_table,

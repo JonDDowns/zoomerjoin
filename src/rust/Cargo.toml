@@ -10,6 +10,7 @@ crate-type = ["staticlib"]
 name = "zoomerjoin"
 
 [dependencies]
+chrono = "0.4.44"
 dashmap = { version = "5.5.3", features = ["inline"] }
 extendr-api = { version = "0.8.0", features = ["ndarray"] }
 itertools = "0.10.5"

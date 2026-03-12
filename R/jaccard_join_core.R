@@ -88,6 +88,7 @@ jaccard_join  <- function(a, b, by_a, by_b, block_by_a, block_by_b, n_gram_width
        n_gram_width,
       nthread = nthread
      )
+  print("End jaccard similarity calculation")
 
   return(list(
               match_table = match_table,
